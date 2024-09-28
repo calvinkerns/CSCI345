@@ -28,84 +28,40 @@ public class Backpack
     //Methods
     public boolean insertItemInMainPocket(String itemName, double itemWeight)
     {
-        boolean result = false;
+        boolean result = insertItemInPocket(mainPocketItems, itemName, itemWeight, MAIN_POCKET_MAX_WEIGHT);
 
-        if((itemWeight+getMainPocketTotalWeight()) <= MAIN_POCKET_MAX_WEIGHT){
-            BackpackItem item = new BackpackItem(itemName, itemWeight);
-
-            mainPocketItems.add(item);
-            result = true;
-        }
-        
         return result;
     }
     
     public boolean insertItemInRightPocket(String itemName, double itemWeight)
     {
-    	boolean result = false;
+    	boolean result = insertItemInPocket(rightPocketItems, itemName, itemWeight, RIGHT_POCKET_MAX_WEIGHT);
 
-        if((itemWeight+getRightPocketTotalWeight()) <= RIGHT_POCKET_MAX_WEIGHT){
-            BackpackItem item = new BackpackItem(itemName, itemWeight);
-
-            rightPocketItems.add(item);
-            result = true;
-        }
-        
         return result;
     }
     
     public boolean insertItemInLeftPocket(String itemName, double itemWeight)
     {
-    	boolean result = false;
+    	boolean result = insertItemInPocket(leftPocketItems, itemName, itemWeight, LEFT_POCKET_MAX_WEIGHT);
 
-        if((itemWeight+getLeftPocketTotalWeight()) <= LEFT_POCKET_MAX_WEIGHT){
-            BackpackItem item = new BackpackItem(itemName, itemWeight);
-
-            leftPocketItems.add(item);
-            result = true;
-        }
-        
         return result;
     }
     
     public boolean removeItemFromMainPocket(String itemName)
     {
-    	boolean result = false;
-        
-        for(int i=0; i < mainPocketItems.size(); i++){
-            if(mainPocketItems.get(i).itemName == itemName){
-                mainPocketItems.remove(i);
-                result = true;
-            }
-        }
+    	boolean result = removeItemFromPocket(mainPocketItems, itemName);
         return result;
     }
     
     public boolean removeItemFromRightPocket(String itemName)
     {
-    	boolean result = false;
-
-        for(int i=0; i < rightPocketItems.size(); i++){
-            if(rightPocketItems.get(i).itemName == itemName){
-                rightPocketItems.remove(i);
-                result = true;
-            }
-        }
-
+    	boolean result = removeItemFromPocket(rightPocketItems, itemName);
         return result;
     }
     
     public boolean removeItemFromLeftPocket(String itemName)
     {
-    	boolean result = false;
-
-        for(int i=0; i < leftPocketItems.size(); i++){
-            if(leftPocketItems.get(i).itemName == itemName){
-                leftPocketItems.remove(i);
-                result = true;
-            }
-        }
-
+    	boolean result = removeItemFromPocket(leftPocketItems, itemName);
         return result;
     }
     
@@ -171,18 +127,27 @@ public class Backpack
     private boolean insertItemInPocket(List<BackpackItem> pocketItems, String itemName, double itemWeight, int pocketMaxWeight)
     {
         boolean result = false;
-        
-        
 
+        if((itemWeight+getPocketTotalWeight(pocketItems)) <= pocketMaxWeight){
+            BackpackItem item = new BackpackItem(itemName, itemWeight);
+
+            pocketItems.add(item);
+            result = true;
+        }
+        
         return result;
     }
     
     private boolean removeItemFromPocket(List<BackpackItem> pocketItems, String itemName)
     {
     	boolean result = false;
-
-    	
-    	
+        
+        for(int i=0; i < pocketItems.size(); i++){
+            if(pocketItems.get(i).itemName == itemName){
+                pocketItems.remove(i);
+                result = true;
+            }
+        }
         return result;
     }
     
