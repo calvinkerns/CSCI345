@@ -16,52 +16,70 @@ import java.util.ArrayList;
 public class Backpack
 {
     //Constants
-    private final int MAIN_POCKET_MAX_WEIGHT = 10;
-    private final int LEFT_POCKET_MAX_WEIGHT = 5;
-    private final int RIGHT_POCKET_MAX_WEIGHT = 5;
+    private int MAIN_POCKET_MAX_WEIGHT = 10;
+    private int LEFT_POCKET_MAX_WEIGHT = 5;
+    private int RIGHT_POCKET_MAX_WEIGHT = 5;
 
-    //Fields (Data members)
-    private List<BackpackItem> mainPocketItems = new ArrayList<BackpackItem>();
-    private List<BackpackItem> leftPocketItems = new ArrayList<BackpackItem>();
-    private List<BackpackItem> rightPocketItems = new ArrayList<BackpackItem>();
+    final Pocket mainPocket;
+    final Pocket leftPocket;
+    final Pocket rightPocket;
     
+    //Constructor
+    public Backpack(){
+        mainPocket = new Pocket("Main", MAIN_POCKET_MAX_WEIGHT);
+        leftPocket = new Pocket("Left", LEFT_POCKET_MAX_WEIGHT);
+        rightPocket = new Pocket("Right", RIGHT_POCKET_MAX_WEIGHT);
+    }
+
+    public Backpack(int maxMain, int maxRight, int MaxLeft){
+        this.MAIN_POCKET_MAX_WEIGHT = maxMain;
+        this.RIGHT_POCKET_MAX_WEIGHT = maxRight;
+        this.LEFT_POCKET_MAX_WEIGHT = MaxLeft;
+        mainPocket = new Pocket("Main", MAIN_POCKET_MAX_WEIGHT);
+        leftPocket = new Pocket("Left", LEFT_POCKET_MAX_WEIGHT);
+        rightPocket = new Pocket("Right", RIGHT_POCKET_MAX_WEIGHT);
+    }
+
     //Methods
     public boolean insertItemInMainPocket(String itemName, double itemWeight)
     {
-        boolean result = insertItemInPocket(mainPocketItems, itemName, itemWeight, MAIN_POCKET_MAX_WEIGHT);
+        boolean result = mainPocket.insertItemInPocket(itemName, itemWeight);
 
         return result;
     }
     
     public boolean insertItemInRightPocket(String itemName, double itemWeight)
     {
-    	boolean result = insertItemInPocket(rightPocketItems, itemName, itemWeight, RIGHT_POCKET_MAX_WEIGHT);
+    	boolean result = rightPocket.insertItemInPocket(itemName, itemWeight);
 
         return result;
     }
     
     public boolean insertItemInLeftPocket(String itemName, double itemWeight)
     {
-    	boolean result = insertItemInPocket(leftPocketItems, itemName, itemWeight, LEFT_POCKET_MAX_WEIGHT);
+    	boolean result = leftPocket.insertItemInPocket(itemName, itemWeight);
 
         return result;
     }
     
     public boolean removeItemFromMainPocket(String itemName)
     {
-    	boolean result = removeItemFromPocket(mainPocketItems, itemName);
+    	boolean result = mainPocket.removeItemFromPocket(itemName);
+
         return result;
     }
     
     public boolean removeItemFromRightPocket(String itemName)
     {
-    	boolean result = removeItemFromPocket(rightPocketItems, itemName);
+    	boolean result = rightPocket.removeItemFromPocket(itemName);
+
         return result;
     }
     
     public boolean removeItemFromLeftPocket(String itemName)
     {
-    	boolean result = removeItemFromPocket(leftPocketItems, itemName);
+    	boolean result = leftPocket.removeItemFromPocket(itemName);
+
         return result;
     }
     
@@ -79,17 +97,17 @@ public class Backpack
     
     public void listItemsInMainPocket()
     {
-    	listItemsInPocket(mainPocketItems, "Main");
+    	mainPocket.listItemsInPocket();
     }
     
     public void listItemsInRightPocket()
     {
-    	listItemsInPocket(rightPocketItems, "Right");
+    	rightPocket.listItemsInPocket();
     }
     
     public void listItemsInLeftPocket()
     {
-    	listItemsInPocket(leftPocketItems, "Left");
+    	leftPocket.listItemsInPocket();
     }
     
     public double getTotalWeight()
@@ -105,74 +123,22 @@ public class Backpack
     
     public double getMainPocketTotalWeight()
     {
-    	double totalWeight = getPocketTotalWeight(mainPocketItems);
+    	double totalWeight = mainPocket.getPocketTotalWeight();
     	
         return totalWeight;
     }
     
     public double getRightPocketTotalWeight()
     {
-    	double totalWeight = getPocketTotalWeight(rightPocketItems);
+    	double totalWeight = rightPocket.getPocketTotalWeight();
     	
         return totalWeight;
     }
     
     public double getLeftPocketTotalWeight()
     {
-    	double totalWeight = getPocketTotalWeight(leftPocketItems);
+    	double totalWeight = leftPocket.getPocketTotalWeight();
     	
         return totalWeight;
-    }
-    
-    private boolean insertItemInPocket(List<BackpackItem> pocketItems, String itemName, double itemWeight, int pocketMaxWeight)
-    {
-        boolean result = false;
-
-        if((itemWeight+getPocketTotalWeight(pocketItems)) <= pocketMaxWeight){
-            BackpackItem item = new BackpackItem(itemName, itemWeight);
-
-            pocketItems.add(item);
-            result = true;
-        }
-        
-        return result;
-    }
-    
-    private boolean removeItemFromPocket(List<BackpackItem> pocketItems, String itemName)
-    {
-    	boolean result = false;
-        
-        for(int i=0; i < pocketItems.size(); i++){
-            if(pocketItems.get(i).itemName == itemName){
-                pocketItems.remove(i);
-                result = true;
-            }
-        }
-        return result;
-    }
-    
-    private double getPocketTotalWeight(List<BackpackItem> pocketItems)
-    {
-    	double totalWeight = 0;
-        
-        for(int i = 0; i < pocketItems.size(); i++){
-            totalWeight += pocketItems.get(i).itemWeight;
-        }
-    	
-    	
-        return totalWeight;
-    }
-    
-    private void listItemsInPocket(List<BackpackItem> pocketItems, String pocketName)
-    {
-    	System.out.println("Listing " + pocketName + " Pocket Items..." );
-    	
-    	for (int index = 0; index < pocketItems.size(); index++)
-    	{
-    		System.out.println("Pocket Item: " 
-    				+ pocketItems.get(index).itemName
-    				+ " " 
-    				+ pocketItems.get(index).itemWeight);
-    	}
     }
 }
