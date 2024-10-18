@@ -14,16 +14,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+enum CurrentPocket{
+    None,
+    Main,
+    Right,
+    Left;
+}
+
 public class Backpack implements Iterable<Pocket> 
 {
     //Constants
     private int MAIN_POCKET_MAX_WEIGHT = 10;
     private int LEFT_POCKET_MAX_WEIGHT = 5;
     private int RIGHT_POCKET_MAX_WEIGHT = 5;
-
-    final Pocket mainPocket;
-    final Pocket leftPocket;
-    final Pocket rightPocket;
     
     //Constructor
 
@@ -45,46 +48,34 @@ public class Backpack implements Iterable<Pocket>
     }
 
     //Methods
-    public boolean insertItemInMainPocket(String itemName, double itemWeight)
+    public void insertItemInMainPocket(String itemName, double itemWeight)
     {
-        boolean result = mainPocket.insertItemInPocket(itemName, itemWeight);
-
-        return result;
+        mainPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public boolean insertItemInRightPocket(String itemName, double itemWeight)
+    public void insertItemInRightPocket(String itemName, double itemWeight)
     {
-    	boolean result = rightPocket.insertItemInPocket(itemName, itemWeight);
-
-        return result;
+        rightPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public boolean insertItemInLeftPocket(String itemName, double itemWeight)
+    public void insertItemInLeftPocket(String itemName, double itemWeight)
     {
-    	boolean result = leftPocket.insertItemInPocket(itemName, itemWeight);
-
-        return result;
+        leftPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public boolean removeItemFromMainPocket(String itemName)
+    public void removeItemFromMainPocket(String itemName)
     {
-    	boolean result = mainPocket.removeItemFromPocket(itemName);
-
-        return result;
+    	mainPocket.removeItemFromPocket(itemName);
     }
     
-    public boolean removeItemFromRightPocket(String itemName)
+    public void removeItemFromRightPocket(String itemName)
     {
-    	boolean result = rightPocket.removeItemFromPocket(itemName);
-
-        return result;
+    	rightPocket.removeItemFromPocket(itemName);
     }
     
-    public boolean removeItemFromLeftPocket(String itemName)
+    public void removeItemFromLeftPocket(String itemName)
     {
-    	boolean result = leftPocket.removeItemFromPocket(itemName);
-
-        return result;
+    	leftPocket.removeItemFromPocket(itemName);
     }
     
     public void listItemsInBackpack()
@@ -149,25 +140,21 @@ public class Backpack implements Iterable<Pocket>
     // Implementing Iterable for Pocket
     @Override
     public Iterator<Pocket> iterator() {
-        return new BackpackIterator();
+        return pockets.iterator();
     }
 
-    // Inner class for BackpackIterator
-    private class BackpackIterator implements Iterator<Pocket> {
-        private int currentPocket = 0; // 0 = main, 1 = left, 2 = right
-        private final Pocket[] pockets = {mainPocket, leftPocket, rightPocket};
-
-        @Override
-        public boolean hasNext() {
-            return currentPocket < pockets.length;
+    @Override
+    public Pocket next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("No more pockets in the backpack.");
         }
-
-        @Override
-        public Pocket next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No more pockets in the backpack.");
-            }
-            return pockets[currentPocket++];
+        else{
+            return CurrentPocket;
         }
+    }
+
+    @Override
+    public boolean hasNext() {
+        return CurrentPocket < pockets.length;
     }
 }

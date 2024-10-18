@@ -20,6 +20,7 @@ public class Pocket implements Iterable<BackpackItem>{
 
     //Fields (Data members)
     private List<BackpackItem> pocketItems = new ArrayList<BackpackItem>();
+    
 
     //Constructor
 
@@ -30,43 +31,39 @@ public class Pocket implements Iterable<BackpackItem>{
     }
 
     //Methods
-    public boolean insertItemInPocket(String itemName, double itemWeight)
+
+    public void insertItemInPocket(String itemName, double itemWeight)
     {
-        boolean result = false;
-        
         //Check for invalid weight, throw error if so
-        if(itemWeight <= 0 || ((itemWeight+getPocketTotalWeight()) > maxPocketWeight)){
+        if(itemWeight <= 0){
             String message = "Invalid Weight Exception. Item name: " + itemName + " Weight: " + itemWeight + ".";
+            throw new IllegalArgumentException(message);
+        }
+        else if((itemWeight+getPocketTotalWeight()) > maxPocketWeight){
+            String message = "Weight exceeded exception. Current pocket weight: ", getPocketTotalWeight(), "\nMaximum pocket weight:"  + maxPocketWeight + " Item weight: " + itemWeight + ".";
             throw new IllegalArgumentException(message);
         }
         else{
             BackpackItem item = new BackpackItem(itemName, itemWeight);
-
             pocketItems.add(item);
-            result = true;
         }
-        
-        return result;
     }
 
-    public boolean removeItemFromPocket(String itemName) 
+    public void removeItemFromPocket(String itemName) 
     {
-    	boolean result = false;
-        
+        found = false;
         for(int i=0; i < pocketItems.size(); i++){
             if(pocketItems.get(i).itemName.equals(itemName)){
                 pocketItems.remove(i);
-                result = true;
+                found = true;
             }
         }
         
         //Throw exception if item not found
-        if(!result){
+        if(!found){
             String message = "Item not found exception. Item name: " + itemName;
             throw new NoSuchElementException(message);
         }
-
-        return result;
     }
 
     public double getPocketTotalWeight()
@@ -98,24 +95,6 @@ public class Pocket implements Iterable<BackpackItem>{
     // Implementing Iterable
     @Override
     public Iterator<BackpackItem> iterator() {
-        return new PocketIterator();
-    }
-
-    // Inner class for Iterator
-    private class PocketIterator implements Iterator<BackpackItem> {
-        private int currentIndex = 0;
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex < pocketItems.size();
-        }
-
-        @Override
-        public BackpackItem next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No more items in the pocket.");
-            }
-            return pocketItems.get(currentIndex++);
-        }
+        return pocketItems.iterator();
     }
 }
