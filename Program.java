@@ -1,83 +1,80 @@
-/*
-# Name:
-# Date:
-# Description:
-*/
+
+import java.util.Iterator;
 import java.util.Scanner;
 public class Program
 {
-    public static void main(String[] args)
-    {
-        Scanner keyboard = new Scanner(System.in);
-        System.out.println("Running the Backpack application...\n");
-        Backpack backpack = new Backpack(20, 7, 7);
-        boolean result = backpack.insertItemInMainPocket("Sleeping bag", 2.0);
-        if (result == true)
-            {
-            System.out.println("Item inserted in main pocket...");
-        }
-        else
-            {
-            System.out.println("Item could not be inserted in main pocket...");
-        }
-        result = backpack.insertItemInMainPocket("Tent", 5.0);
-        if (result == true)
-        {
-            System.out.println("Item inserted in main pocket...");
-        }
-        else
-        {
-            System.out.println("Item could not be inserted in main pocket...");
-        }
-        double pocketWeight = backpack.getMainPocketTotalWeight();
-        System.out.println("Main Pocket weight: " + pocketWeight);
-        backpack.listItemsInMainPocket();
-        System.out.println();
-        result = backpack.insertItemInRightPocket("Cup", 0.25);
-        if (result == true)
-        {
-            System.out.println("Item inserted in right pocket...");
-        }
-        else
-        {
-            System.out.println("Item could not be inserted in right pocket...");
-        }
-
-        pocketWeight = backpack.getRightPocketTotalWeight();
-        System.out.println("Right Pocket weight: " + pocketWeight);
-        backpack.listItemsInRightPocket();
-        System.out.println();
-        result = backpack.insertItemInLeftPocket("Compass", 0.1);
-        if (result == true)
-        {
-            System.out.println("Item inserted in left pocket...");
-        }
-        else
-        {
-            System.out.println("Item could not be inserted in left pocket...");
-        }
-        pocketWeight = backpack.getLeftPocketTotalWeight();
-        System.out.println("Left Pocket weight: " + pocketWeight);
-        backpack.listItemsInLeftPocket();
-        System.out.println();
-        double backPackTotalWeight = backpack.getTotalWeight();
-        System.out.println("Backpack total weight: " + backPackTotalWeight);
-        System.out.println();
-        result = backpack.removeItemFromMainPocket("Sleeping bag");
-        if (result == true)
-        {
-            System.out.println("Item removed from main pocket...");
-        }
-        else
-        {
-            System.out.println("Item could not be removed from main pocket...");
-        }
-        backpack.listItemsInMainPocket();
-        System.out.println();
-        backPackTotalWeight = backpack.getTotalWeight();
-        System.out.println("Backpack total weight: " + backPackTotalWeight);
-        System.out.println();
-        backpack.listItemsInBackpack();
-        keyboard.close();
-    }
+public static void main(String[] args)
+{
+Scanner keyboard = new Scanner(System.in);
+System.out.println("Running the Backpack application...\n");
+try
+{
+Backpack backpack = new Backpack();
+String itemName = "Sleeping bag";
+backpack.insertItemInMainPocket(itemName, 2.0);
+//backpack.insertItemInMainPocket(itemName, -1.0);
+itemName = "Tent";
+backpack.insertItemInMainPocket(itemName, 5.0);
+itemName = "Stove";
+//backpack.insertItemInMainPocket(itemName, 4.0);
+itemName = "Cup";
+backpack.insertItemInRightPocket(itemName, 0.25);
+itemName = "Plate";
+backpack.insertItemInRightPocket(itemName, 0.5);
+itemName = "Compass";
+backpack.insertItemInLeftPocket(itemName, 0.1);
+itemName = "Knife";
+backpack.insertItemInLeftPocket(itemName, 0.3);
+itemName = "Sleeping bag";
+//backpack.removeItemFromMainPocket(itemName);
+itemName = "Plate";
+//backpack.removeItemFromRightPocket(itemName);
+itemName = "Compass";
+//backpack.removeItemFromLeftPocket(itemName);
+itemName = "Fork";
+//backpack.removeItemFromLeftPocket(itemName);
+double backPackTotalWeight = backpack.getTotalWeight();
+System.out.println("Backpack total weight: " + backPackTotalWeight);
+System.out.println();
+System.out.println("Iterating through the backpack:\n");
+Iterator<Pocket> backpackIterator = backpack.iterator();
+while(backpackIterator.hasNext())
+{
+Pocket pocket = backpackIterator.next();
+Iterator<BackpackItem> pocketIterator = pocket.iterator();
+while (pocketIterator.hasNext())
+{
+BackpackItem backpackItem = pocketIterator.next();
+System.out.println("Item name: " + backpackItem.itemName
++ " Item weight: " + backpackItem.itemWeight);
+}
+}
+System.out.println();
+System.out.println("Iterating through the backpack:\n");
+for (Pocket pocket: backpack)
+{
+for (BackpackItem backpackItem : pocket)
+{
+System.out.println("Item name: " + backpackItem.itemName
++ " Item weight: " + backpackItem.itemWeight);
+}
+}
+System.out.println();
+}
+catch (Exception ex)
+{
+String exceptionMessage = ex.getMessage();
+String exceptionCauseMessage = ex.getCause().getMessage();
+if (exceptionCauseMessage == "Insert")
+{
+System.out.println(exceptionMessage);
+}
+else if (exceptionCauseMessage == "Remove")
+{
+System.out.println(exceptionMessage);
+}
+else System.out.println("Unknown Exception");
+}
+keyboard.close();
+}
 }

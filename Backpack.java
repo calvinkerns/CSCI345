@@ -4,7 +4,6 @@
 #              to add, remove, and view items in different pockets of the backpack.
 # Date: 9/24/2024
 # Specification: 
-# - The Backpack class will have private instance variables for pockets.
 # - The class will provide methods to add items to either pocket.
 # - The class will also include methods to remove items and check what items are in each pocket.
 # - The class will ensure that the max weight per pocket isn't exceeded.
@@ -12,8 +11,10 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class Backpack
+public class Backpack implements Iterable<Pocket> 
 {
     //Constants
     private int MAIN_POCKET_MAX_WEIGHT = 10;
@@ -25,12 +26,15 @@ public class Backpack
     final Pocket rightPocket;
     
     //Constructor
+
+    //general backpack constructor that sets pocket main weights to max:10, left:5, right:5
     public Backpack(){
         mainPocket = new Pocket("Main", MAIN_POCKET_MAX_WEIGHT);
         leftPocket = new Pocket("Left", LEFT_POCKET_MAX_WEIGHT);
         rightPocket = new Pocket("Right", RIGHT_POCKET_MAX_WEIGHT);
     }
 
+    //backpack constructor taking arguments of max weight for main right and left pockets
     public Backpack(int maxMain, int maxRight, int MaxLeft){
         this.MAIN_POCKET_MAX_WEIGHT = maxMain;
         this.RIGHT_POCKET_MAX_WEIGHT = maxRight;
@@ -140,5 +144,30 @@ public class Backpack
     	double totalWeight = leftPocket.getPocketTotalWeight();
     	
         return totalWeight;
+    }
+
+    // Implementing Iterable for Pocket
+    @Override
+    public Iterator<Pocket> iterator() {
+        return new BackpackIterator();
+    }
+
+    // Inner class for BackpackIterator
+    private class BackpackIterator implements Iterator<Pocket> {
+        private int currentPocket = 0; // 0 = main, 1 = left, 2 = right
+        private final Pocket[] pockets = {mainPocket, leftPocket, rightPocket};
+
+        @Override
+        public boolean hasNext() {
+            return currentPocket < pockets.length;
+        }
+
+        @Override
+        public Pocket next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No more pockets in the backpack.");
+            }
+            return pockets[currentPocket++];
+        }
     }
 }
