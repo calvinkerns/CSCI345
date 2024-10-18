@@ -14,19 +14,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-enum CurrentPocket{
-    None,
-    Main,
-    Right,
-    Left;
-}
-
-public class Backpack implements Iterable<Pocket> 
+public class Backpack implements Iterable<Pocket>, Iterator<Pocket>
 {
-    //Constants
-    private int MAIN_POCKET_MAX_WEIGHT = 10;
-    private int LEFT_POCKET_MAX_WEIGHT = 5;
-    private int RIGHT_POCKET_MAX_WEIGHT = 5;
+    // Constants
+    private static final int MAIN_POCKET_MAX_WEIGHT = 10;
+    private static final int RIGHT_POCKET_MAX_WEIGHT = 5;
+    private static final int LEFT_POCKET_MAX_WEIGHT = 5;
+
+    // Fields (Data members)
+    private Pocket mainPocket;
+    private Pocket rightPocket;
+    private Pocket leftPocket;
+    private CurrentPocket currentPocket;
     
     //Constructor
 
@@ -39,41 +38,38 @@ public class Backpack implements Iterable<Pocket>
 
     //backpack constructor taking arguments of max weight for main right and left pockets
     public Backpack(int maxMain, int maxRight, int MaxLeft){
-        this.MAIN_POCKET_MAX_WEIGHT = maxMain;
-        this.RIGHT_POCKET_MAX_WEIGHT = maxRight;
-        this.LEFT_POCKET_MAX_WEIGHT = MaxLeft;
         mainPocket = new Pocket("Main", MAIN_POCKET_MAX_WEIGHT);
         leftPocket = new Pocket("Left", LEFT_POCKET_MAX_WEIGHT);
         rightPocket = new Pocket("Right", RIGHT_POCKET_MAX_WEIGHT);
     }
 
     //Methods
-    public void insertItemInMainPocket(String itemName, double itemWeight)
+    public void insertItemInMainPocket(String itemName, double itemWeight) throws Exception
     {
         mainPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public void insertItemInRightPocket(String itemName, double itemWeight)
+    public void insertItemInRightPocket(String itemName, double itemWeight) throws Exception
     {
         rightPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public void insertItemInLeftPocket(String itemName, double itemWeight)
+    public void insertItemInLeftPocket(String itemName, double itemWeight) throws Exception
     {
         leftPocket.insertItemInPocket(itemName, itemWeight);
     }
     
-    public void removeItemFromMainPocket(String itemName)
+    public void removeItemFromMainPocket(String itemName) throws Exception
     {
     	mainPocket.removeItemFromPocket(itemName);
     }
     
-    public void removeItemFromRightPocket(String itemName)
+    public void removeItemFromRightPocket(String itemName) throws Exception
     {
     	rightPocket.removeItemFromPocket(itemName);
     }
     
-    public void removeItemFromLeftPocket(String itemName)
+    public void removeItemFromLeftPocket(String itemName) throws Exception
     {
     	leftPocket.removeItemFromPocket(itemName);
     }
@@ -137,24 +133,48 @@ public class Backpack implements Iterable<Pocket>
         return totalWeight;
     }
 
-    // Implementing Iterable for Pocket
+    //Implement iterable for backpack
     @Override
     public Iterator<Pocket> iterator() {
-        return pockets.iterator();
+        this.currentPocket = CurrentPocket.None;
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        switch (currentPocket) {
+            //initialize iteration
+            case None:
+                return true;
+            case Main:
+                return true; 
+            case Right:
+                return true;
+            case Left:
+                return false;
+            default:
+                return false;
+        }
     }
 
     @Override
     public Pocket next() {
         if (!hasNext()) {
-            throw new NoSuchElementException("No more pockets in the backpack.");
+            throw new NoSuchElementException();
         }
-        else{
-            return CurrentPocket;
-        }
-    }
 
-    @Override
-    public boolean hasNext() {
-        return CurrentPocket < pockets.length;
+        switch (currentPocket) {
+            case None:
+                currentPocket = CurrentPocket.Main;
+                return mainPocket;
+            case Main:
+                currentPocket = CurrentPocket.Right;
+                return rightPocket;
+            case Right:
+                currentPocket = CurrentPocket.Left;
+                return leftPocket;
+            default:
+                throw new NoSuchElementException();
+        }
     }
 }

@@ -32,16 +32,19 @@ public class Pocket implements Iterable<BackpackItem>{
 
     //Methods
 
-    public void insertItemInPocket(String itemName, double itemWeight)
+    //Insert item unless item weight is negative or exceeds max weight of pocket
+    public void insertItemInPocket(String itemName, double itemWeight) throws Exception
     {
         //Check for invalid weight, throw error if so
         if(itemWeight <= 0){
-            String message = "Invalid Weight Exception. Item name: " + itemName + " Weight: " + itemWeight + ".";
-            throw new IllegalArgumentException(message);
+            throw new Exception(String.format(
+                    "Invalid weight exception. Pocket name: %s Item name: %s Item weight: %.1f", pocketName,
+                    itemName, itemWeight), new Throwable("Insert"));
         }
         else if((itemWeight+getPocketTotalWeight()) > maxPocketWeight){
-            String message = "Weight exceeded exception. Current pocket weight: ", getPocketTotalWeight(), "\nMaximum pocket weight:"  + maxPocketWeight + " Item weight: " + itemWeight + ".";
-            throw new IllegalArgumentException(message);
+            throw new Exception(String.format(
+                    "Weight exceeded exception. Pocket name: %s Current pocket weight: %.1f Maximum pocket weight: %d Item name: %s Item weight: %.1f",
+                    pocketName, getPocketTotalWeight(), maxPocketWeight, itemName, itemWeight), new Throwable("Insert"));
         }
         else{
             BackpackItem item = new BackpackItem(itemName, itemWeight);
@@ -49,20 +52,22 @@ public class Pocket implements Iterable<BackpackItem>{
         }
     }
 
-    public void removeItemFromPocket(String itemName) 
-    {
-        found = false;
-        for(int i=0; i < pocketItems.size(); i++){
-            if(pocketItems.get(i).itemName.equals(itemName)){
-                pocketItems.remove(i);
+    //Search for item to remove, if not found throw exception
+    public void removeItemFromPocket(String itemName) throws Exception {
+        boolean found = false;
+
+        for (int i = 0; i < this.pocketItems.size(); i++) {
+            if (this.pocketItems.get(i).itemName.equals(itemName)) {
+                this.pocketItems.remove(i);
                 found = true;
             }
         }
         
-        //Throw exception if item not found
+        //throw exception
         if(!found){
-            String message = "Item not found exception. Item name: " + itemName;
-            throw new NoSuchElementException(message);
+            throw new Exception(
+                    String.format("Item not found exception. Pocket name: %s Item name: %s", pocketName, itemName),
+                    new Throwable("Remove"));
         }
     }
 
