@@ -7,33 +7,33 @@
 import java.io.*;
 import java.lang.Thread;
 
-public class Clock extends Notifier{
-    
-    //fields
+public class Clock extends Notifier {
+    private static final int MILLISECONDS_PER_SECOND = 1000;
     private int tickPeriodInSeconds;
-
-    //methods
-    public void activate(){
-
-        while(1){
-            try{
-                Thread.sleep(tickPeriodInSeconds * MILLISECONDS_PER_SECOND)
-            }
-            catch(Exception e){
+    
+    //activates clock, ticking according to tickPeriodInSeconds
+    public void activate() {
+        while(true) {
+            try {
+                Thread.sleep(tickPeriodInSeconds * MILLISECONDS_PER_SECOND);
+                tick();
+            } catch(InterruptedException e) {
                 System.out.println("Error caught " + e);
             }
         }
     }
-
-    public void setTimerPeriod(int tickPeriodInSeconds){
+    
+    public void setTimerPeriod(int tickPeriodInSeconds) {
         this.tickPeriodInSeconds = tickPeriodInSeconds;
     }
-
-    public void tick(){
-        
+    
+    //get current time and pass as string to notifyListeners
+    public void tick() {
+        java.time.LocalTime currentTime = java.time.LocalTime.now();
+        String timeStr = String.format("%02d.%02d.%02d", 
+            currentTime.getHour(),
+            currentTime.getMinute(),
+            currentTime.getSecond());
+        notifyListeners(timeStr);
     }
-
-    public void notifyListeners(String message);
-
-    public void registerListener(Listener listener);
 }

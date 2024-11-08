@@ -4,20 +4,17 @@
 # Description: clock listener prints out clock info
 */
 
-public class ClockListener implements Listener{
-    //fields
+public class ClockListener implements Listener {
     private String name;
-
-    ClockListener(String name){
+    
+    //constructor taking name string
+    public ClockListener(String name) {
         this.name = name;
     }
-
-    @override
-    public void notify(String message){
+    
+    //override notify from Listener class, print out custom message with name and time
+    @Override
+    public void notify(String message) {
         System.out.println(name + " the time is: " + message);
-    }
-
-    public void registerListener(Listener listener){
-        
     }
 }
